@@ -1,4 +1,4 @@
-name: TY Processing
+name: TY Processing_10
 
 permissions:
   contents: write
@@ -41,4 +41,5 @@ jobs:
           https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git add .
           git commit -m "Update satellite and radar images [skip ci]" || echo "No changes"
-          git push origin HEAD:main
+          git pull --rebase origin main
+          git push origin main
