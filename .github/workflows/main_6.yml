@@ -40,7 +40,8 @@ jobs:
 
           git remote set-url origin \
           https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
-
-          git commit -m "Update satellite and radar images [skip ci]" || echo "No changes"
+          
           git add .
-          git push origin HEAD:main
+          git commit -m "Update satellite and radar images [skip ci]" || echo "No changes"
+          git pull --rebase origin main
+          git push origin main
