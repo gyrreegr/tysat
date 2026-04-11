@@ -595,16 +595,6 @@ def download_typhoon_data(input_dir):
     print("  開始自動下載最新颱風資料")
     print("="*55)
 
-    # 1. 清空資料夾內的 txt 檔案
-    old_txts = glob.glob(os.path.join(input_dir, "*.txt"))
-    for f in old_txts:
-        try:
-            os.remove(f)
-        except Exception as e:
-            print(f"  [警告] 無法刪除舊檔案 {f}: {e}")
-    if old_txts:
-        print(f"  ✔ 已清空 {len(old_txts)} 個舊檔案")
-
     # 2. 抓取 JSON 尋找颱風 ID
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     json_url = "https://www.tropicaltidbits.com/storminfo/stormhtml.json"
