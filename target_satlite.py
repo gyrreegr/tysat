@@ -590,31 +590,46 @@ def process_directory(input_dir, output_dir):
 # =============================================================================
 # 自動下載功能
 # =============================================================================
+# =============================================================================
+# 自動下載功能 (修改版：改用 TXT 讀取颱風編號)
+# =============================================================================
 def download_typhoon_data(input_dir):
     print("\n" + "="*55)
     print("  開始自動下載最新颱風資料")
     print("="*55)
 
-    # 2. 抓取 JSON 尋找颱風 ID
+    # 1. 清空資料夾內的 txt 檔案
+    old_txts = glob.glob(os.path.join(input_dir, "*.txt"))
+    for f in old_txts:
+        try:
+            os.remove(f)
+        except Exception as e:
+            print(f"  [警告] 無法刪除舊檔案 {f}: {e}")
+    if old_txts:
+        print(f"  ✔ 已清空 {len(old_txts)} 個舊檔案")
+
+    # 2. 抓取 TXT 尋找颱風 ID
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
-    json_url = "https://www.tropicaltidbits.com/storminfo/stormhtml.json"
-    print(f"  正在獲取風暴清單: {json_url}")
+    txt_url = "https://seanthinkweather.dpdns.org/tynumsat.txt"
+    print(f"  正在獲取風暴清單: {txt_url}")
     
     try:
-        r = http.request('GET', json_url, timeout=10.0)
+        r = http.request('GET', txt_url, timeout=10.0)
         if r.status != 200:
-            print(f"  [錯誤] JSON 取得失敗，HTTP 狀態碼: {r.status}")
+            print(f"  [錯誤] TXT 取得失敗，HTTP 狀態碼: {r.status}")
             return
-        data = json.loads(r.data.decode('utf-8'))
+        
+        # 直接讀取並解碼為文字
+        text_data = r.data.decode('utf-8').strip()
     except Exception as e:
-        print(f"  [錯誤] 無法解析 JSON: {e}")
+        print(f"  [錯誤] 無法取得或解析 TXT: {e}")
         return
 
-    # 找出所有符合 ??W 結尾的鍵值 (例如 04W)
-    storm_ids = [k for k in data.keys() if re.match(r'^\d{2}W$', k)]
+    # 利用正則表達式找出所有符合 ??W 格式的字串 (例如 04W)，並使用 set 去除重複項目
+    storm_ids = list(set(re.findall(r'\d{2}W', text_data)))
     
     if not storm_ids:
-        print("  [提示] 目前 JSON 中沒有活躍的西北太平洋颱風 (??W)")
+        print("  [提示] 目前文字檔中沒有活躍的西北太平洋颱風 (??W)")
         return
         
     print(f"  發現目標颱風 ID: {', '.join(storm_ids)}")
