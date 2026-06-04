@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install pandas numpy requests urllib3 matplotlib cartopy geopandas pyproj shapely
 
       - name: Run miulit_path Processing
         run: python ty_various_path.py
