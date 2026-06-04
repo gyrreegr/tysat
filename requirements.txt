@@ -1,0 +1,9 @@
+pandas
+numpy
+requests
+urllib3
+matplotlib
+cartopy
+geopandas
+pyproj
+shapely
