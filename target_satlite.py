@@ -345,25 +345,24 @@ def read_xyinfo(path):
 
 
 def build_latlon(grid, lat_min, lon_min, dlat, dlon):
-    """完全照抄原始 plot.py 邏輯建立經緯度"""
+    """建立經緯度網格（修正經度起點偏移問題）"""
     ny, nx = grid.shape
 
     # 緯度（左上角 → 往下遞減）
     lats = lat_min - np.arange(ny) * abs(dlat)
 
-    # 經度（修正版）：原始負號代表東經 → 先取絕對值
+    # 經度：原始負號代表東經 → 先取絕對值
     lon_start = abs(lon_min)
-    dlon_array = np.full(nx, abs(dlon))
-    lons = lon_start + np.cumsum(dlon_array)
+    # 使用 arange 確保從起點正確計算，避免 cumsum 造成的 1 像素偏移
+    lons = lon_start + np.arange(nx) * abs(dlon)
 
     return lats, lons
 
 
-# =============================================================================
-# 繪圖主函式
-# =============================================================================
-
-def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type,resolution_km):
+def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, resolution_km):
+    # ★ 修正重點 1: 每次繪圖前先關閉所有未釋放的圖片，避免記憶體洩漏 (More than 20 figures 錯誤)
+    plt.close('all')
+    
     print(f"  讀取資料: {btfile_path}")
     data_raw = read_btfile(btfile_path)
     grid = try_reshape(data_raw) if data_raw.ndim == 1 else data_raw
@@ -400,18 +399,17 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type,r
     # mask invalid
     masked_data = np.ma.masked_where(plot_data <= -100.0, plot_data)
 
-    proj = ccrs.PlateCarree()
+    # ★ 修正重點 2: 區分資料投影與繪圖投影。將繪圖中心設為 180 度，避免西北太平洋經度跨越 180° 時引發 LinearRing 崩潰錯誤
+    data_proj = ccrs.PlateCarree()
+    plot_proj = ccrs.PlateCarree(central_longitude=180)
 
-    # =========================
-    # ⭐ WHITE THEME CORE FIX
-    # =========================
     fig = plt.figure(figsize=(16, 9), dpi=120)
-    ax = fig.add_subplot(1, 1, 1, projection=proj)
+    ax = fig.add_subplot(1, 1, 1, projection=plot_proj)
 
     # extent
     lon_ext = [lons[0], lons[-1]]
     lat_ext = [lats[-1], lats[0]]
-    ax.set_extent([lon_ext[0], lon_ext[1], lat_ext[0], lat_ext[1]], crs=proj)
+    ax.set_extent([lon_ext[0], lon_ext[1], lat_ext[0], lat_ext[1]], crs=data_proj)
 
     # =========================
     # 白底地圖底層
@@ -435,7 +433,7 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type,r
         masked_data,
         origin='upper',
         extent=[lons[0], lons[-1], lats[-1], lats[0]],
-        transform=proj,
+        transform=data_proj,
         cmap=cmap,
         vmin=vmin,
         vmax=vmax,
@@ -447,7 +445,7 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type,r
     # gridlines (white theme)
     # =========================
     gl = ax.gridlines(
-        crs=proj,
+        crs=data_proj,
         draw_labels=True,
         linewidth=0.5,
         color='#cccccc',
@@ -495,15 +493,17 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type,r
 
     plt.tight_layout()
 
-    plt.savefig(
-        output_path,
-        dpi=120,
-        bbox_inches='tight',
-        facecolor='white',
-        edgecolor='none'
-    )
-
-    plt.close(fig)
+    # ★ 修正重點 3: 使用 try...finally 確保即便畫圖拋出錯誤也能強制釋放 fig
+    try:
+        plt.savefig(
+            output_path,
+            dpi=120,
+            bbox_inches='tight',
+            facecolor='white',
+            edgecolor='none'
+        )
+    finally:
+        plt.close(fig)
 
     print(f"  ✔ 已儲存: {output_path}")
 
