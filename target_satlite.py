@@ -360,7 +360,7 @@ def build_latlon(grid, lat_min, lon_min, dlat, dlon):
 
 
 def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, resolution_km):
-    # ★ 修正重點 1: 每次繪圖前先關閉所有未釋放的圖片，避免記憶體洩漏 (More than 20 figures 錯誤)
+    # ★ 修正重點 1: 每次繪圖前先關閉所有未釋放的圖片
     plt.close('all')
     
     print(f"  讀取資料: {btfile_path}")
@@ -399,7 +399,7 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
     # mask invalid
     masked_data = np.ma.masked_where(plot_data <= -100.0, plot_data)
 
-    # ★ 修正重點 2: 區分資料投影與繪圖投影。將繪圖中心設為 180 度，避免西北太平洋經度跨越 180° 時引發 LinearRing 崩潰錯誤
+    # ★ 修正重點 2: 保持中心為 180 度，避免跨日線圖層錯亂
     data_proj = ccrs.PlateCarree()
     plot_proj = ccrs.PlateCarree(central_longitude=180)
 
@@ -416,28 +416,23 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
     # =========================
     ax.add_feature(cfeature.LAND.with_scale('10m'),
                    facecolor='#f2f2f2', zorder=0)
-
     ax.add_feature(cfeature.OCEAN.with_scale('10m'),
                    facecolor='#ffffff', zorder=0)
-
     ax.add_feature(cfeature.BORDERS.with_scale('10m'),
                    linewidth=0.5, edgecolor='#888888', zorder=2)
-
     ax.add_feature(cfeature.COASTLINE.with_scale('10m'),
                    linewidth=0.8, edgecolor='#444444', zorder=2)
 
     # =========================
-    # image layer
+    # image layer (★ 改用 pcolormesh 避開 scipy 依賴)
     # =========================
-    im = ax.imshow(
-        masked_data,
-        origin='upper',
-        extent=[lons[0], lons[-1], lats[-1], lats[0]],
+    im = ax.pcolormesh(
+        lons, lats, masked_data,
         transform=data_proj,
         cmap=cmap,
         vmin=vmin,
         vmax=vmax,
-        interpolation='nearest',
+        shading='auto',
         zorder=1
     )
 
@@ -456,7 +451,6 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
 
     gl.top_labels = False
     gl.right_labels = False
-
     gl.xlabel_style = {'size': 9, 'color': '#333333'}
     gl.ylabel_style = {'size': 9, 'color': '#333333'}
 
@@ -465,7 +459,6 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
     # =========================
     cbar = plt.colorbar(im, ax=ax, orientation='vertical',
                         fraction=0.025, pad=0.03, shrink=0.7)
-
     cbar.ax.tick_params(labelsize=9, colors='#333333')
     cbar.outline.set_edgecolor('#bbbbbb')
 
@@ -493,7 +486,7 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
 
     plt.tight_layout()
 
-    # ★ 修正重點 3: 使用 try...finally 確保即便畫圖拋出錯誤也能強制釋放 fig
+    # ★ 修正重點 3: 使用 try...finally 確保強制釋放 fig
     try:
         plt.savefig(
             output_path,
