@@ -360,7 +360,6 @@ def build_latlon(grid, lat_min, lon_min, dlat, dlon):
 
 
 def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, resolution_km):
-    # ★ 修正重點 1: 每次繪圖前先關閉所有未釋放的圖片
     plt.close('all')
     
     print(f"  讀取資料: {btfile_path}")
@@ -396,16 +395,14 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
         else:
             vmin, vmax = 0.0, 1.0
 
-    # mask invalid
     masked_data = np.ma.masked_where(plot_data <= -100.0, plot_data)
 
-# ★ 修正重點 2: 使用預設投影，避免 Shapely 2.0+ 與 Cartopy gridlines 發生邊界不閉合的錯誤
     data_proj = ccrs.PlateCarree()
     plot_proj = ccrs.PlateCarree()
+
     fig = plt.figure(figsize=(16, 9), dpi=120)
     ax = fig.add_subplot(1, 1, 1, projection=plot_proj)
 
-    # extent
     lon_ext = [lons[0], lons[-1]]
     lat_ext = [lats[-1], lats[0]]
     ax.set_extent([lon_ext[0], lon_ext[1], lat_ext[0], lat_ext[1]], crs=data_proj)
@@ -413,17 +410,13 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
     # =========================
     # 白底地圖底層
     # =========================
-    ax.add_feature(cfeature.LAND.with_scale('10m'),
-                   facecolor='#f2f2f2', zorder=0)
-    ax.add_feature(cfeature.OCEAN.with_scale('10m'),
-                   facecolor='#ffffff', zorder=0)
-    ax.add_feature(cfeature.BORDERS.with_scale('10m'),
-                   linewidth=0.5, edgecolor='#888888', zorder=2)
-    ax.add_feature(cfeature.COASTLINE.with_scale('10m'),
-                   linewidth=0.8, edgecolor='#444444', zorder=2)
+    ax.add_feature(cfeature.LAND.with_scale('10m'), facecolor='#f2f2f2', zorder=0)
+    ax.add_feature(cfeature.OCEAN.with_scale('10m'), facecolor='#ffffff', zorder=0)
+    ax.add_feature(cfeature.BORDERS.with_scale('10m'), linewidth=0.5, edgecolor='#888888', zorder=2)
+    ax.add_feature(cfeature.COASTLINE.with_scale('10m'), linewidth=0.8, edgecolor='#444444', zorder=2)
 
     # =========================
-    # image layer (★ 改用 pcolormesh 避開 scipy 依賴)
+    # image layer
     # =========================
     im = ax.pcolormesh(
         lons, lats, masked_data,
@@ -436,28 +429,37 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
     )
 
     # =========================
-    # gridlines (white theme)
+    # gridlines (★ 終極解法: 棄用 Cartopy gridliner，改用原生 Matplotlib ticks)
     # =========================
-    gl = ax.gridlines(
-        crs=data_proj,
-        draw_labels=True,
-        linewidth=0.5,
-        color='#cccccc',
-        alpha=0.8,
-        linestyle='--',
-        zorder=4
-    )
+    import math
+    from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
-    gl.top_labels = False
-    gl.right_labels = False
-    gl.xlabel_style = {'size': 9, 'color': '#333333'}
-    gl.ylabel_style = {'size': 9, 'color': '#333333'}
+    # 動態計算合適的整數刻度 (每 2 度一格)
+    min_lon, max_lon = math.floor(lons[0]), math.ceil(lons[-1])
+    min_lat, max_lat = math.floor(lats[-1]), math.ceil(lats[0])
+    
+    xticks = np.arange(min_lon, max_lon + 1, 2)
+    yticks = np.arange(min_lat, max_lat + 1, 2)
+
+    # 設定 X/Y 軸刻度位置
+    ax.set_xticks(xticks, crs=data_proj)
+    ax.set_yticks(yticks, crs=data_proj)
+    
+    # 格式化為經緯度樣式 (例如 120°E, 20°N)
+    ax.xaxis.set_major_formatter(LongitudeFormatter(zero_direction_label=True))
+    ax.yaxis.set_major_formatter(LatitudeFormatter())
+
+    # 設定標籤樣式 (只留左側與下方)
+    ax.tick_params(axis='both', labelsize=9, colors='#333333', 
+                   bottom=True, left=True, top=False, right=False)
+
+    # 開啟原生網格線
+    ax.grid(True, linewidth=0.5, color='#cccccc', alpha=0.8, linestyle='--', zorder=4)
 
     # =========================
-    # colorbar (white theme)
+    # colorbar
     # =========================
-    cbar = plt.colorbar(im, ax=ax, orientation='vertical',
-                        fraction=0.025, pad=0.03, shrink=0.7)
+    cbar = plt.colorbar(im, ax=ax, orientation='vertical', fraction=0.025, pad=0.03, shrink=0.7)
     cbar.ax.tick_params(labelsize=9, colors='#333333')
     cbar.outline.set_edgecolor('#bbbbbb')
 
@@ -467,38 +469,24 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
         cbar.set_label('Albedo', fontsize=10, color='#333333')
         title = f"Himawari-9 Band 03 Albedo ({cmap_name}_{resolution_km}km)"
     elif band_type in [6]:
-        cbar.set_label(f'Brightness Temperature ({unit_label})',
-                       fontsize=10, color='#333333')
+        cbar.set_label(f'Brightness Temperature ({unit_label})', fontsize=10, color='#333333')
         title = f"Himawari-9 Band 08 BT ({cmap_name}_{resolution_km}km)"
     else:
-        cbar.set_label(f'Brightness Temperature ({unit_label})',
-                       fontsize=10, color='#333333')
+        cbar.set_label(f'Brightness Temperature ({unit_label})', fontsize=10, color='#333333')
         title = f"Himawari-9 Band 13 BT ({cmap_name}_{resolution_km}km)"
 
     ax.set_title(title, fontsize=13, fontweight='bold', pad=12, color='#222222')
 
-    # =========================
-    # figure background (white theme)
-    # =========================
     fig.patch.set_facecolor('white')
     ax.set_facecolor('white')
-
     plt.tight_layout()
 
-    # ★ 修正重點 3: 使用 try...finally 確保強制釋放 fig
     try:
-        plt.savefig(
-            output_path,
-            dpi=120,
-            bbox_inches='tight',
-            facecolor='white',
-            edgecolor='none'
-        )
+        plt.savefig(output_path, dpi=120, bbox_inches='tight', facecolor='white', edgecolor='none')
     finally:
         plt.close(fig)
 
     print(f"  ✔ 已儲存: {output_path}")
-
 # =============================================================================
 # 波段 → 色階對應規則
 # Band 3 (IR)  → 所有 IR 色階都產生：ir, rammb, ca, rbtop, davork
