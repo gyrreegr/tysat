@@ -399,10 +399,9 @@ def plot_satellite(btfile_path, xyinfo_path, output_path, cmap_name, band_type, 
     # mask invalid
     masked_data = np.ma.masked_where(plot_data <= -100.0, plot_data)
 
-    # ★ 修正重點 2: 保持中心為 180 度，避免跨日線圖層錯亂
+# ★ 修正重點 2: 使用預設投影，避免 Shapely 2.0+ 與 Cartopy gridlines 發生邊界不閉合的錯誤
     data_proj = ccrs.PlateCarree()
-    plot_proj = ccrs.PlateCarree(central_longitude=180)
-
+    plot_proj = ccrs.PlateCarree()
     fig = plt.figure(figsize=(16, 9), dpi=120)
     ax = fig.add_subplot(1, 1, 1, projection=plot_proj)
 
