@@ -98,38 +98,13 @@ def plot_typhoon_map(extent, output_filename):
         data = json.load(f)
         
     dataset = data['cwaopendata'].get('Dataset', data['cwaopendata'].get('dataset'))
-    tc = dataset['TropicalCyclones']['TropicalCyclone']
+    tc_raw = dataset['TropicalCyclones']['TropicalCyclone']
     
-    # 解析觀測 (Analysis) 與預報 (Forecast)
-    analysis_fixes = tc.get('AnalysisData', {}).get('Fix', [])
-    forecast_fixes = tc.get('ForecastData', {}).get('Fix', [])
-    
-    # 紀錄所有要畫的點 [lon, lat, label_text, is_forecast, fix_data, datetime_obj]
-    points_to_draw = []
-    
-    # 處理觀測資料
-    last_analysis_dt = None
-    for fix in analysis_fixes:
-        lon = float(fix['CoordinateLongitude'])
-        lat = float(fix['CoordinateLatitude'])
-        dt = parse_iso_time(fix['DateTime'])
-        last_analysis_dt = dt
-        points_to_draw.append([lon, lat, format_time_label(dt), False, fix, dt])
-        
-    # 處理預報資料
-    for fix in forecast_fixes:
-        lon = float(fix['CoordinateLongitude'])
-        lat = float(fix['CoordinateLatitude'])
-        init_dt = parse_iso_time(fix['InitialTime'])
-        tau = int(fix['ForecastHour'])
-        target_dt = init_dt + timedelta(hours=tau)
-        points_to_draw.append([lon, lat, format_time_label(target_dt), True, fix, target_dt])
-
-    # 取得最後標題時間
-    if last_analysis_dt:
-        title_time_str = last_analysis_dt.strftime("%Y年%m月%d日%H時")
+    # 確保 tc_data 始終是 list，相容「單一颱風」與「多颱風」的狀況
+    if isinstance(tc_raw, dict):
+        tc_list = [tc_raw]
     else:
-        title_time_str = "未知時間"
+        tc_list = tc_raw
 
     # --- B. 建立地圖與圖層 ---
     fig, ax = plt.subplots(figsize=(12, 10), subplot_kw={'projection': ccrs.PlateCarree()})
@@ -167,88 +142,126 @@ def plot_typhoon_map(extent, output_filename):
     except Exception as e:
         print(f"讀取鄉鎮 SHP 失敗: {e}")
 
-    # --- C. 繪製颱風資訊 ---
-    analysis_coords = [[p[0], p[1]] for p in points_to_draw if not p[3]]
-    forecast_coords = [[p[0], p[1]] for p in points_to_draw if p[3]]
-
-    # (Z-order 6) 畫路線
-    # 💡 這裡不加 in_bounds 判斷，因為我們要把整條線丟給 Cartopy，
-    # 它會自動把超出的部分切掉，並完美保留且畫出在經緯度範圍內的線段！
-    if len(analysis_coords) >= 2:
-        lons, lats = zip(*analysis_coords)
-        ax.plot(lons, lats, color='black', linestyle='-', linewidth=2, zorder=6)
-        
-    if forecast_coords:
-        if analysis_coords:
-            fcst_line = [analysis_coords[-1]] + forecast_coords
-        else:
-            fcst_line = forecast_coords
-        lons, lats = zip(*fcst_line)
-        ax.plot(lons, lats, color='#ffa008', linestyle='-', linewidth=2, zorder=6)
-
-    # (Z-order 5) 畫暴風圈
-    for p in points_to_draw:
-        lon, lat, _, _, fix, _ = p
-        
-        # 💡 新增條件：颱風中心必須在顯示範圍內才繪製暴風圈面
-        if in_bounds(lon, lat):
-            if fix.get('Circle25ms') and fix['Circle25ms'].get('Radius'):
-                r25 = float(fix['Circle25ms']['Radius'])
-                poly = get_wind_circle_polygon(lat, lon, r25)
-                ax.add_geometries([poly], crs=ccrs.PlateCarree(), facecolor='#836040', alpha=0.4, edgecolor='none', zorder=5)
-                
-            if fix.get('Circle15ms') and fix['Circle15ms'].get('Radius'):
-                r15 = float(fix['Circle15ms']['Radius'])
-                poly = get_wind_circle_polygon(lat, lon, r15)
-                ax.add_geometries([poly], crs=ccrs.PlateCarree(), facecolor='#5b8152', alpha=0.4, edgecolor='none', zorder=5)
-
-    # (Z-order 7 & 8) 畫 Icon 與文字標籤
+    # 讀取 Icon 圖片
     try:
         icon_img = mpimg.imread(ICON_PATH)
-        imagebox = OffsetImage(icon_img, zoom=0.015) 
     except Exception as e:
         print(f"讀取 Icon 失敗，將以普通點代替: {e}")
-        imagebox = None
+        icon_img = None
 
-    labeled_dates = set()
-    for p in points_to_draw:
-        # 💡 注意這裡的解包：把第四個參數 is_forecast 拿出來用
-        lon, lat, label, is_forecast, fix, dt = p
+    last_analysis_dt_global = None
+
+    # --- C. 繪製颱風資訊 (支援多颱風迴圈) ---
+    for tc in tc_list:
+        analysis_fixes = tc.get('AnalysisData', {}).get('Fix', [])
+        forecast_fixes = tc.get('ForecastData', {}).get('Fix', [])
         
-        if in_bounds(lon, lat):
-            # 放置 Icon (無論是觀測還是預報，Icon 都要畫)
-            if imagebox:
-                ab = AnnotationBbox(imagebox, (lon, lat), frameon=False, zorder=7)
-                ax.add_artist(ab)
-            else:
-                ax.scatter(lon, lat, color='red', zorder=7)
+        # 若 Fix 只有單一筆資料時，CWA 會回傳 dict，需強制轉為 list
+        if isinstance(analysis_fixes, dict): analysis_fixes = [analysis_fixes]
+        if isinstance(forecast_fixes, dict): forecast_fixes = [forecast_fixes]
+        
+        points_to_draw = []
+        
+        # 處理觀測資料
+        for i, fix in enumerate(analysis_fixes):
+            lon = float(fix['CoordinateLongitude'])
+            lat = float(fix['CoordinateLatitude'])
+            dt = parse_iso_time(fix['DateTime'])
+            
+            # 更新全域最後觀測時間 (用於標題)
+            if last_analysis_dt_global is None or dt > last_analysis_dt_global:
+                last_analysis_dt_global = dt
                 
-            # 💡 標示文字邏輯：新增 if is_forecast 判斷，只有預報資料才輸出文字
-            if is_forecast:
-                current_date = dt.date()
-                if current_date not in labeled_dates:
-                    ax.annotate(label, (lon, lat), xytext=(0, -15), textcoords='offset points', 
-                                ha='center', va='top', fontsize=8, color='black',
-                                bbox=dict(boxstyle='round,pad=0.2', facecolor='white', alpha=0.8, edgecolor='none'),
-                                zorder=8)
-                    labeled_dates.add(current_date)
+            # 💡 新增判斷：判斷是否為最新一筆觀測資料 (now)
+            is_latest_obs = (i == len(analysis_fixes) - 1)
+            p_type = 'latest_obs' if is_latest_obs else 'past_obs'
+            points_to_draw.append([lon, lat, format_time_label(dt), p_type, fix, dt])
+            
+        # 處理預報資料
+        for fix in forecast_fixes:
+            lon = float(fix['CoordinateLongitude'])
+            lat = float(fix['CoordinateLatitude'])
+            init_dt = parse_iso_time(fix['InitialTime'])
+            tau = int(fix['ForecastHour'])
+            target_dt = init_dt + timedelta(hours=tau)
+            points_to_draw.append([lon, lat, format_time_label(target_dt), 'forecast', fix, target_dt])
+
+        # 分離出觀測與預報的座標點 (latest_obs 也算在觀測路徑內)
+        analysis_coords = [[p[0], p[1]] for p in points_to_draw if p[3] in ['past_obs', 'latest_obs']]
+        forecast_coords = [[p[0], p[1]] for p in points_to_draw if p[3] == 'forecast']
+
+        # (Z-order 6) 畫路線
+        if len(analysis_coords) >= 2:
+            lons, lats = zip(*analysis_coords)
+            ax.plot(lons, lats, color='black', linestyle='-', linewidth=2, zorder=6)
+            
+        if forecast_coords:
+            if analysis_coords:
+                fcst_line = [analysis_coords[-1]] + forecast_coords
+            else:
+                fcst_line = forecast_coords
+            lons, lats = zip(*fcst_line)
+            ax.plot(lons, lats, color='#ffa008', linestyle='-', linewidth=2, zorder=6)
+
+        # (Z-order 5 & 7 & 8) 畫暴風圈、Icon 與文字標籤
+        labeled_dates = set()
+        for p in points_to_draw:
+            lon, lat, label, p_type, fix, dt = p
+            
+            if in_bounds(lon, lat):
+                # 💡 只有 'latest_obs' (now時刻) 和 'forecast' (預報) 才會畫暴風圈
+                if p_type in ['latest_obs', 'forecast']:
+                    if fix.get('Circle25ms') and fix['Circle25ms'].get('Radius'):
+                        r25 = float(fix['Circle25ms']['Radius'])
+                        poly = get_wind_circle_polygon(lat, lon, r25)
+                        ax.add_geometries([poly], crs=ccrs.PlateCarree(), facecolor='#836040', alpha=0.4, edgecolor='none', zorder=5)
+                        
+                    if fix.get('Circle15ms') and fix['Circle15ms'].get('Radius'):
+                        r15 = float(fix['Circle15ms']['Radius'])
+                        poly = get_wind_circle_polygon(lat, lon, r15)
+                        ax.add_geometries([poly], crs=ccrs.PlateCarree(), facecolor='#5b8152', alpha=0.4, edgecolor='none', zorder=5)
+
+                # 💡 放置實心點或 Icon
+                if p_type == 'past_obs':
+                    # 過去的觀測路徑使用黑色實心點
+                    ax.scatter(lon, lat, color='black', s=25, zorder=7)
+                else:
+                    # 最新觀測 (now) 與預報使用 Icon
+                    if icon_img is not None:
+                        imagebox = OffsetImage(icon_img, zoom=0.015) 
+                        ab = AnnotationBbox(imagebox, (lon, lat), frameon=False, zorder=7)
+                        ax.add_artist(ab)
+                    else:
+                        ax.scatter(lon, lat, color='red', zorder=7)
+                    
+                # 文字標籤 (只標示預報，避免畫面太雜亂)
+                if p_type == 'forecast':
+                    current_date = dt.date()
+                    if current_date not in labeled_dates:
+                        ax.annotate(label, (lon, lat), xytext=(0, -15), textcoords='offset points', 
+                                    ha='center', va='top', fontsize=8, color='black',
+                                    bbox=dict(boxstyle='round,pad=0.2', facecolor='white', alpha=0.8, edgecolor='none'),
+                                    zorder=8)
+                        labeled_dates.add(current_date)
+
+    # 取得全域最後標題時間
+    if last_analysis_dt_global:
+        title_time_str = last_analysis_dt_global.strftime("%Y年%m月%d日%H時")
+    else:
+        title_time_str = "未知時間"
+
     try:
         if os.path.exists(LOGO_PATH):
             logo_img = mpimg.imread(LOGO_PATH)
-            # zoom 控制商標大小，請依據你的 png 原始解析度調整 (例如 0.1, 0.5 等)
             logo_box = OffsetImage(logo_img, zoom=0.03) 
-            
-            # xycoords='axes fraction' 代表使用圖表的相對比例 (0~1)
-            # xy=(0.02, 0.98) 代表放在 X軸 2%、Y軸 98% 的位置 (左上角留一點邊距)
-            # box_alignment=(0, 1) 代表以商標圖片的左上角為錨點進行對齊
             ab_logo = AnnotationBbox(logo_box, xy=(0.02, 0.98), xycoords='axes fraction', 
                                      box_alignment=(0, 1), frameon=False, zorder=10)
             ax.add_artist(ab_logo)
     except Exception as e:
         print(f"讀取商標失敗: {e}")
+        
     # --- D. 標題與輸出 ---
     ax.set_title(f"中央氣象署預測路徑 ({title_time_str})", fontsize=18, pad=15, fontweight='bold')
-    
     ax.outline_patch.set_visible(False) if hasattr(ax, 'outline_patch') else ax.spines['geo'].set_visible(False)
 
     plt.tight_layout()
