@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20260703033626",
+  "Identifier": "CWA-TropicalCyclone_20260703093236",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-07-03T03:36:26+08:00",
+  "Sent": "2026-07-03T09:32:36+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
@@ -177,16 +177,6 @@
          "Pressure": "970",
          "MovingSpeed": "24",
          "MovingDirection": "WNW",
-         "MovingPrediction": [
-          {
-           "@lang": "zh-hant",
-           "#text": "以每小時18轉14公里速度，向西進行"
-          },
-          {
-           "@lang": "en-us",
-           "#text": "WEST 18 KM/HR BECOMING 14 KM/HR"
-          }
-         ],
          "Circle15ms": {
           "Radius": "180",
           "QuadrantRadii": {
@@ -233,38 +223,104 @@
            ]
           }
          }
+        },
+        {
+         "DateTime": "2026-07-03T08:00:00+08:00",
+         "CoordinateLongitude": "155.5",
+         "CoordinateLatitude": "12.8",
+         "MaxWindSpeed": "38",
+         "MaxGustSpeed": "48",
+         "Pressure": "960",
+         "MovingSpeed": "22",
+         "MovingDirection": "W",
+         "MovingPrediction": [
+          {
+           "@lang": "zh-hant",
+           "#text": "以每小時16轉13公里速度，向西進行"
+          },
+          {
+           "@lang": "en-us",
+           "#text": "WEST 16 KM/HR BECOMING 13 KM/HR"
+          }
+         ],
+         "Circle15ms": {
+          "Radius": "220",
+          "QuadrantRadii": {
+           "Radius": [
+            {
+             "@dir": "NE",
+             "#text": "270"
+            },
+            {
+             "@dir": "SE",
+             "#text": "170"
+            },
+            {
+             "@dir": "SW",
+             "#text": "160"
+            },
+            {
+             "@dir": "NW",
+             "#text": "270"
+            }
+           ]
+          }
+         },
+         "Circle25ms": {
+          "Radius": "80",
+          "QuadrantRadii": {
+           "Radius": [
+            {
+             "@dir": "NE",
+             "#text": "90"
+            },
+            {
+             "@dir": "SE",
+             "#text": "70"
+            },
+            {
+             "@dir": "SW",
+             "#text": "70"
+            },
+            {
+             "@dir": "NW",
+             "#text": "90"
+            }
+           ]
+          }
+         }
         }
        ]
       },
       "ForecastData": {
        "Fix": [
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "6",
-         "CoordinateLongitude": "155.4",
-         "CoordinateLatitude": "12.8",
-         "MaxWindSpeed": "38",
-         "MaxGustSpeed": "48",
-         "Pressure": "960",
-         "MovingSpeed": "24",
+         "CoordinateLongitude": "154.4",
+         "CoordinateLatitude": "12.7",
+         "MaxWindSpeed": "43",
+         "MaxGustSpeed": "53",
+         "Pressure": "945",
+         "MovingSpeed": "20",
          "MovingDirection": "W",
          "Circle15ms": {
           "Radius": "220"
          },
          "Circle25ms": {
-          "Radius": "70"
+          "Radius": "80"
          },
          "Radius70PercentProbability": "40"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "12",
-         "CoordinateLongitude": "154.4",
-         "CoordinateLatitude": "12.9",
-         "MaxWindSpeed": "45",
-         "MaxGustSpeed": "55",
-         "Pressure": "940",
-         "MovingSpeed": "18",
+         "CoordinateLongitude": "153.5",
+         "CoordinateLatitude": "12.7",
+         "MaxWindSpeed": "48",
+         "MaxGustSpeed": "58",
+         "Pressure": "930",
+         "MovingSpeed": "16",
          "MovingDirection": "W",
          "Circle15ms": {
           "Radius": "250"
@@ -272,17 +328,17 @@
          "Circle25ms": {
           "Radius": "80"
          },
-         "Radius70PercentProbability": "50"
+         "Radius70PercentProbability": "40"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "18",
-         "CoordinateLongitude": "153.5",
-         "CoordinateLatitude": "12.9",
-         "MaxWindSpeed": "53",
-         "MaxGustSpeed": "65",
-         "Pressure": "915",
-         "MovingSpeed": "16",
+         "CoordinateLongitude": "152.7",
+         "CoordinateLatitude": "12.6",
+         "MaxWindSpeed": "51",
+         "MaxGustSpeed": "63",
+         "Pressure": "925",
+         "MovingSpeed": "15",
          "MovingDirection": "W",
          "Circle15ms": {
           "Radius": "280"
@@ -293,14 +349,14 @@
          "Radius70PercentProbability": "80"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "24",
-         "CoordinateLongitude": "152.7",
-         "CoordinateLatitude": "12.9",
+         "CoordinateLongitude": "152.0",
+         "CoordinateLatitude": "12.5",
          "MaxWindSpeed": "55",
          "MaxGustSpeed": "68",
          "Pressure": "910",
-         "MovingSpeed": "14",
+         "MovingSpeed": "13",
          "MovingDirection": "W",
          "Circle15ms": {
           "Radius": "300"
@@ -311,17 +367,17 @@
          "Radius70PercentProbability": "90"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "36",
-         "CoordinateLongitude": "151.3",
-         "CoordinateLatitude": "12.9",
+         "CoordinateLongitude": "150.7",
+         "CoordinateLatitude": "12.7",
          "MaxWindSpeed": "58",
          "MaxGustSpeed": "73",
          "Pressure": "900",
-         "MovingSpeed": "13",
+         "MovingSpeed": "12",
          "MovingDirection": "W",
          "Circle15ms": {
-          "Radius": "320"
+          "Radius": "330"
          },
          "Circle25ms": {
           "Radius": "110"
@@ -329,15 +385,15 @@
          "Radius70PercentProbability": "100"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "48",
-         "CoordinateLongitude": "150.0",
+         "CoordinateLongitude": "149.3",
          "CoordinateLatitude": "13.0",
-         "MaxWindSpeed": "58",
-         "MaxGustSpeed": "73",
-         "Pressure": "900",
-         "MovingSpeed": "12",
-         "MovingDirection": "W",
+         "MaxWindSpeed": "60",
+         "MaxGustSpeed": "75",
+         "Pressure": "895",
+         "MovingSpeed": "13",
+         "MovingDirection": "WNW",
          "Circle15ms": {
           "Radius": "350"
          },
@@ -347,10 +403,10 @@
          "Radius70PercentProbability": "140"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "72",
-         "CoordinateLongitude": "146.6",
-         "CoordinateLatitude": "14.4",
+         "CoordinateLongitude": "145.8",
+         "CoordinateLatitude": "14.6",
          "MaxWindSpeed": "60",
          "MaxGustSpeed": "75",
          "Pressure": "895",
@@ -362,17 +418,17 @@
          "Circle25ms": {
           "Radius": "120"
          },
-         "Radius70PercentProbability": "210"
+         "Radius70PercentProbability": "200"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "96",
-         "CoordinateLongitude": "141.9",
-         "CoordinateLatitude": "16.1",
+         "CoordinateLongitude": "140.6",
+         "CoordinateLatitude": "16.4",
          "MaxWindSpeed": "60",
          "MaxGustSpeed": "75",
          "Pressure": "895",
-         "MovingSpeed": "22",
+         "MovingSpeed": "25",
          "MovingDirection": "WNW",
          "Circle15ms": {
           "Radius": "350"
@@ -383,14 +439,14 @@
          "Radius70PercentProbability": "360"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "120",
-         "CoordinateLongitude": "136.2",
-         "CoordinateLatitude": "17.6",
+         "CoordinateLongitude": "134.8",
+         "CoordinateLatitude": "17.8",
          "MaxWindSpeed": "60",
          "MaxGustSpeed": "75",
          "Pressure": "895",
-         "MovingSpeed": "26",
+         "MovingSpeed": "27",
          "MovingDirection": "WNW",
          "Circle15ms": {
           "Radius": "350"
@@ -504,14 +560,48 @@
          "Pressure": "998",
          "MovingSpeed": "19",
          "MovingDirection": "WSW",
+         "Circle15ms": {
+          "Radius": "50",
+          "QuadrantRadii": {
+           "Radius": [
+            {
+             "@dir": "NE",
+             "#text": "50"
+            },
+            {
+             "@dir": "SE",
+             "#text": "50"
+            },
+            {
+             "@dir": "SW",
+             "#text": "50"
+            },
+            {
+             "@dir": "NW",
+             "#text": "50"
+            }
+           ]
+          }
+         },
+         "Circle25ms": null
+        },
+        {
+         "DateTime": "2026-07-03T08:00:00+08:00",
+         "CoordinateLongitude": "110.0",
+         "CoordinateLatitude": "17.3",
+         "MaxWindSpeed": "18",
+         "MaxGustSpeed": "25",
+         "Pressure": "998",
+         "MovingSpeed": "5",
+         "MovingDirection": "NE",
          "MovingPrediction": [
           {
            "@lang": "zh-hant",
-           "#text": "以每小時17轉20公里速度，向北北西進行"
+           "#text": "以每小時19轉14公里速度，向西北進行"
           },
           {
            "@lang": "en-us",
-           "#text": "NNW 17 KM/HR BECOMING 20 KM/HR"
+           "#text": "NW 19 KM/HR BECOMING 14 KM/HR"
           }
          ],
          "Circle15ms": {
@@ -544,15 +634,15 @@
       "ForecastData": {
        "Fix": [
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "6",
          "CoordinateLongitude": "109.8",
-         "CoordinateLatitude": "17.4",
+         "CoordinateLatitude": "18.0",
          "MaxWindSpeed": "18",
          "MaxGustSpeed": "25",
          "Pressure": "998",
-         "MovingSpeed": "6",
-         "MovingDirection": "N",
+         "MovingSpeed": "17",
+         "MovingDirection": "NNW",
          "Circle15ms": {
           "Radius": "50"
          },
@@ -560,47 +650,47 @@
          "Radius70PercentProbability": "30"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "12",
-         "CoordinateLongitude": "109.6",
-         "CoordinateLatitude": "18.3",
+         "CoordinateLongitude": "109.1",
+         "CoordinateLatitude": "18.8",
          "MaxWindSpeed": "18",
          "MaxGustSpeed": "25",
          "Pressure": "998",
-         "MovingSpeed": "17",
-         "MovingDirection": "NNW",
+         "MovingSpeed": "19",
+         "MovingDirection": "NW",
          "Circle15ms": {
           "Radius": "50"
          },
          "Circle25ms": null,
-         "Radius70PercentProbability": "40"
+         "Radius70PercentProbability": "50"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "18",
-         "CoordinateLongitude": "109.1",
-         "CoordinateLatitude": "19.1",
-         "MaxWindSpeed": "18",
-         "MaxGustSpeed": "25",
-         "Pressure": "998",
-         "MovingSpeed": "17",
-         "MovingDirection": "NNW",
+         "CoordinateLongitude": "108.6",
+         "CoordinateLatitude": "19.5",
+         "MaxWindSpeed": "20",
+         "MaxGustSpeed": "28",
+         "Pressure": "995",
+         "MovingSpeed": "16",
+         "MovingDirection": "NW",
          "Circle15ms": {
-          "Radius": "50"
+          "Radius": "80"
          },
          "Circle25ms": null,
          "Radius70PercentProbability": "80"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "24",
-         "CoordinateLongitude": "108.5",
-         "CoordinateLatitude": "20.0",
-         "MaxWindSpeed": "20",
-         "MaxGustSpeed": "28",
-         "Pressure": "995",
-         "MovingSpeed": "20",
-         "MovingDirection": "NNW",
+         "CoordinateLongitude": "108.1",
+         "CoordinateLatitude": "20.1",
+         "MaxWindSpeed": "23",
+         "MaxGustSpeed": "30",
+         "Pressure": "992",
+         "MovingSpeed": "14",
+         "MovingDirection": "NW",
          "Circle15ms": {
           "Radius": "80"
          },
@@ -608,15 +698,15 @@
          "Radius70PercentProbability": "90"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "36",
-         "CoordinateLongitude": "107.8",
-         "CoordinateLatitude": "20.9",
+         "CoordinateLongitude": "107.5",
+         "CoordinateLatitude": "21.0",
          "MaxWindSpeed": "20",
          "MaxGustSpeed": "28",
          "Pressure": "995",
          "MovingSpeed": "10",
-         "MovingDirection": "NW",
+         "MovingDirection": "NNW",
          "Circle15ms": {
           "Radius": "80"
          },
@@ -624,14 +714,14 @@
          "Radius70PercentProbability": "100"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "48",
-         "CoordinateLongitude": "107.6",
-         "CoordinateLatitude": "22.3",
+         "CoordinateLongitude": "107.4",
+         "CoordinateLatitude": "22.1",
          "MaxWindSpeed": "18",
          "MaxGustSpeed": "25",
          "Pressure": "998",
-         "MovingSpeed": "13",
+         "MovingSpeed": "10",
          "MovingDirection": "N",
          "Circle15ms": {
           "Radius": "50"
@@ -640,13 +730,13 @@
          "Radius70PercentProbability": "130"
         },
         {
-         "InitialTime": "2026-07-03T02:00:00+08:00",
+         "InitialTime": "2026-07-03T08:00:00+08:00",
          "ForecastHour": "72",
-         "CoordinateLongitude": "109.0",
-         "CoordinateLatitude": "24.9",
-         "MaxWindSpeed": "15",
-         "MaxGustSpeed": "23",
-         "Pressure": "1002",
+         "CoordinateLongitude": "108.8",
+         "CoordinateLatitude": "24.5",
+         "MaxWindSpeed": "10",
+         "MaxGustSpeed": "15",
+         "Pressure": "1005",
          "MovingSpeed": "13",
          "MovingDirection": "NNE",
          "Circle15ms": null,
