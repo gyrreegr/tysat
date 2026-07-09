@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20260709202321",
+  "Identifier": "CWA-TropicalCyclone_20260709220416",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-07-09T20:23:21+08:00",
+  "Sent": "2026-07-09T22:04:16+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
