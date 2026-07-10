@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20260711001125",
+  "Identifier": "CWA-TropicalCyclone_20260711012641",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-07-11T00:11:25+08:00",
+  "Sent": "2026-07-11T01:26:41+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
@@ -2976,6 +2976,62 @@
         "Pressure": "945",
         "MovingSpeed": "30",
         "MovingDirection": "NW",
+        "Circle15ms": {
+         "Radius": "380",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "410"
+           },
+           {
+            "@dir": "SE",
+            "#text": "400"
+           },
+           {
+            "@dir": "SW",
+            "#text": "350"
+           },
+           {
+            "@dir": "NW",
+            "#text": "350"
+           }
+          ]
+         }
+        },
+        "Circle25ms": {
+         "Radius": "180",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "190"
+           },
+           {
+            "@dir": "SE",
+            "#text": "190"
+           },
+           {
+            "@dir": "SW",
+            "#text": "170"
+           },
+           {
+            "@dir": "NW",
+            "#text": "170"
+           }
+          ]
+         }
+        }
+       },
+       {
+        "DateTime": "2026-07-11T01:00:00+08:00",
+        "CoordinateLongitude": "125.4",
+        "CoordinateLatitude": "23.6",
+        "MaxWindSpeed": "43",
+        "MaxGustSpeed": "53",
+        "Pressure": "945",
+        "MovingSpeed": "30",
+        "MovingDirection": "NW",
         "MovingPrediction": [
          {
           "@lang": "zh-hant",
@@ -3053,7 +3109,7 @@
         "Circle25ms": {
          "Radius": "150"
         },
-        "Radius70PercentProbability": "40"
+        "Radius70PercentProbability": "30"
        },
        {
         "InitialTime": "2026-07-10T23:00:00+08:00",
