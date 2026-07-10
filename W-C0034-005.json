@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20260711053015",
+  "Identifier": "CWA-TropicalCyclone_20260711061337",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-07-11T05:30:15+08:00",
+  "Sent": "2026-07-11T06:13:37+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
@@ -3250,12 +3250,68 @@
        {
         "DateTime": "2026-07-11T05:00:00+08:00",
         "CoordinateLongitude": "125.0",
-        "CoordinateLatitude": "24.2",
+        "CoordinateLatitude": "24.3",
         "MaxWindSpeed": "40",
         "MaxGustSpeed": "50",
         "Pressure": "950",
-        "MovingSpeed": "24",
+        "MovingSpeed": "35",
         "MovingDirection": "NNW",
+        "Circle15ms": {
+         "Radius": "350",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "380"
+           },
+           {
+            "@dir": "SE",
+            "#text": "380"
+           },
+           {
+            "@dir": "SW",
+            "#text": "320"
+           },
+           {
+            "@dir": "NW",
+            "#text": "330"
+           }
+          ]
+         }
+        },
+        "Circle25ms": {
+         "Radius": "120",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "130"
+           },
+           {
+            "@dir": "SE",
+            "#text": "130"
+           },
+           {
+            "@dir": "SW",
+            "#text": "110"
+           },
+           {
+            "@dir": "NW",
+            "#text": "110"
+           }
+          ]
+         }
+        }
+       },
+       {
+        "DateTime": "2026-07-11T06:00:00+08:00",
+        "CoordinateLongitude": "124.8",
+        "CoordinateLatitude": "24.4",
+        "MaxWindSpeed": "40",
+        "MaxGustSpeed": "50",
+        "Pressure": "950",
+        "MovingSpeed": "23",
+        "MovingDirection": "WNW",
         "MovingPrediction": [
          {
           "@lang": "zh-hant",
