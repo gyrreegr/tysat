@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20260710120924",
+  "Identifier": "CWA-TropicalCyclone_20260710130830",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-07-10T12:09:24+08:00",
+  "Sent": "2026-07-10T13:08:30+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
@@ -2304,6 +2304,62 @@
         "Pressure": "940",
         "MovingSpeed": "15",
         "MovingDirection": "NW",
+        "Circle15ms": {
+         "Radius": "380",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "430"
+           },
+           {
+            "@dir": "SE",
+            "#text": "450"
+           },
+           {
+            "@dir": "SW",
+            "#text": "350"
+           },
+           {
+            "@dir": "NW",
+            "#text": "300"
+           }
+          ]
+         }
+        },
+        "Circle25ms": {
+         "Radius": "180",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "190"
+           },
+           {
+            "@dir": "SE",
+            "#text": "170"
+           },
+           {
+            "@dir": "SW",
+            "#text": "160"
+           },
+           {
+            "@dir": "NW",
+            "#text": "180"
+           }
+          ]
+         }
+        }
+       },
+       {
+        "DateTime": "2026-07-10T13:00:00+08:00",
+        "CoordinateLongitude": "127.1",
+        "CoordinateLatitude": "21.4",
+        "MaxWindSpeed": "45",
+        "MaxGustSpeed": "55",
+        "Pressure": "940",
+        "MovingSpeed": "24",
+        "MovingDirection": "NNW",
         "MovingPrediction": [
          {
           "@lang": "zh-hant",
@@ -2381,7 +2437,7 @@
         "Circle25ms": {
          "Radius": "180"
         },
-        "Radius70PercentProbability": "40"
+        "Radius70PercentProbability": "30"
        },
        {
         "InitialTime": "2026-07-10T11:00:00+08:00",
