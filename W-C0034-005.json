@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20261018095731",
+  "Identifier": "CWA-TropicalCyclone_20261018102323",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-10-18T09:57:31+08:00",
+  "Sent": "2026-10-18T10:23:23+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
@@ -667,7 +667,7 @@
          "Radius": "220"
         },
         "Circle25ms": {
-         "Radius": "70"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "40"
        },
@@ -685,7 +685,7 @@
          "Radius": "250"
         },
         "Circle25ms": {
-         "Radius": "80"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "50"
        },
@@ -703,7 +703,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "80"
        },
@@ -721,7 +721,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "90"
        },
@@ -739,7 +739,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "110"
        },
@@ -757,7 +757,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "150"
        },
@@ -775,7 +775,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "230"
        },
@@ -793,7 +793,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "360"
        },
@@ -811,7 +811,7 @@
          "Radius": "280"
         },
         "Circle25ms": {
-         "Radius": "90"
+         "Radius": "100"
         },
         "Radius70PercentProbability": "510"
        }
