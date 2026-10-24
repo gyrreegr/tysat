@@ -1,9 +1,9 @@
 {
  "cwaopendata": {
   "@xmlns": "urn:cwa:gov:tw:cwacommon:0.1",
-  "Identifier": "CWA-TropicalCyclone_20261024121416",
+  "Identifier": "CWA-TropicalCyclone_20261024131646",
   "Sender": "fss@wfc.cwa.gov.tw",
-  "Sent": "2026-10-24T12:14:16+08:00",
+  "Sent": "2026-10-24T13:16:46+08:00",
   "Status": "Actual",
   "MsgType": "Update",
   "Scope": "Public",
@@ -4395,6 +4395,62 @@
         "DateTime": "2026-10-24T12:00:00+08:00",
         "CoordinateLongitude": "123.2",
         "CoordinateLatitude": "26.2",
+        "MaxWindSpeed": "33",
+        "MaxGustSpeed": "43",
+        "Pressure": "970",
+        "MovingSpeed": "33",
+        "MovingDirection": "N",
+        "Circle15ms": {
+         "Radius": "220",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "260"
+           },
+           {
+            "@dir": "SE",
+            "#text": "260"
+           },
+           {
+            "@dir": "SW",
+            "#text": "160"
+           },
+           {
+            "@dir": "NW",
+            "#text": "180"
+           }
+          ]
+         }
+        },
+        "Circle25ms": {
+         "Radius": "70",
+         "QuadrantRadii": {
+          "Radius": [
+           {
+            "@dir": "NE",
+            "#text": "90"
+           },
+           {
+            "@dir": "SE",
+            "#text": "90"
+           },
+           {
+            "@dir": "SW",
+            "#text": "50"
+           },
+           {
+            "@dir": "NW",
+            "#text": "60"
+           }
+          ]
+         }
+        }
+       },
+       {
+        "DateTime": "2026-10-24T13:00:00+08:00",
+        "CoordinateLongitude": "123.2",
+        "CoordinateLatitude": "26.5",
         "MaxWindSpeed": "33",
         "MaxGustSpeed": "43",
         "Pressure": "970",
